@@ -9,19 +9,19 @@ from tools.decision_tool import DecisionTool
 def main():
     print("=== STATUS: sprawdzanie Fetch ===")
     status = FetchStatusTool()
-    response = status.run()
+    response = status.run(tool_input="")
 
     print(f"ℹ️ Status Fetch: {response}")
 
     if "offline" in response.lower() or "błąd" in response.lower():
         print("🔁 Fetch nie działa – próbuję restart...")
         restarter = FetchRestartTool()
-        restart_response = restarter.run()
+        restart_response = restarter.run(tool_input="")
         print(f"🔄 {restart_response}")
 
     print("\n=== TEST: uruchomienie FetchTool ===")
     fetch = FetchTool()
-    print(fetch.run())  # bezpieczne nawet jeśli już działa
+    print(fetch.run(tool_input=""))  # bezpieczne nawet jeśli już działa
 
     print("\n=== TEST: pobranie snapshotu z S3Tool ===")
     s3 = S3Tool()
@@ -45,7 +45,10 @@ def main():
 
     print("\n=== TEST: decyzja ===")
     decider = DecisionTool()
-    decyzja = decider.run(segment=segment, wojewodztwo=wojewodztwo)
+    decyzja = decider.run(tool_input={
+        "segment": segment,
+        "wojewodztwo": wojewodztwo
+    })
     print(f"🧠 Decyzja agenta: {decyzja}")
 
 if __name__ == "__main__":
