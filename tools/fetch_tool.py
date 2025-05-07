@@ -1,12 +1,18 @@
 from langchain.tools import BaseTool
+from typing import Type
+from pydantic import BaseModel
 import requests
-from typing import Union, Dict, Any
+
+class EmptyInput(BaseModel):
+    """Brak argumentów wejściowych dla FetchTool."""
+    pass
 
 class FetchTool(BaseTool):
     name: str = "start_fetch"
     description: str = "Wywołuje endpoint /start w aplikacji Fetch na Fly.io, aby uruchomić scrapowanie danych giełdowych"
+    args_schema: Type[BaseModel] = EmptyInput
 
-    def _run(self, tool_input: Union[str, Dict[str, Any]] = "", **kwargs) -> str:
+    def _run(self, *, tool_input: EmptyInput, **kwargs) -> str:
         try:
             url = "https://fetch-2-0.fly.dev/start"
             response = requests.get(url)
@@ -15,5 +21,5 @@ class FetchTool(BaseTool):
         except Exception as e:
             return f"❌ Błąd podczas wywołania Fetch: {str(e)}"
 
-    def _arun(self, tool_input: Union[str, Dict[str, Any]], **kwargs):
+    def _arun(self, *, tool_input: EmptyInput, **kwargs):
         raise NotImplementedError("Async niezaimplementowany")

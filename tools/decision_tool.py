@@ -3,7 +3,7 @@ from typing import Type
 from pydantic import BaseModel, Field
 import pandas as pd
 import os
-from tools.mapper_tool import resolve_wojewodztwo  # <- funkcja globalna, działa
+from tools.mapper_tool import resolve_wojewodztwo
 
 class DecisionInput(BaseModel):
     segment: str = Field(..., description="Segment pojazdu, np. TIR, C, D")
@@ -27,13 +27,14 @@ class DecisionTool(BaseTool):
             self._df = df
         return self._df
 
-    def _run(self, tool_input: DecisionInput, **kwargs) -> str:
+    def _run(self, *, tool_input: DecisionInput, **kwargs) -> str:
         try:
             segment = tool_input.segment.strip().upper()
-            resolved = resolve_wojewodztwo(tool_input.wojewodztwo)
+            wojewodztwo = tool_input.wojewodztwo.strip()
+            resolved = resolve_wojewodztwo(wojewodztwo)
 
             if not resolved:
-                return f"❌ Nie udało się rozpoznać województwa dla: {tool_input.wojewodztwo}"
+                return f"❌ Nie udało się rozpoznać województwa dla: {wojewodztwo}"
 
             resolved = resolved.upper()
             if resolved not in self.df.columns:
@@ -48,5 +49,5 @@ class DecisionTool(BaseTool):
         except Exception as e:
             return f"❌ Błąd w DecisionTool: {str(e)}"
 
-    def _arun(self, tool_input: DecisionInput, **kwargs):
+    def _arun(self, *, tool_input: DecisionInput, **kwargs):
         raise NotImplementedError("Async niezaimplementowany")

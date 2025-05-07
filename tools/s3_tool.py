@@ -16,7 +16,7 @@ class S3Tool(BaseTool):
     description: str = "Porównuje 2 najnowsze snapshoty z S3 i zwraca tylko nowe zlecenia z przemapowanym województwem"
     args_schema: Type[BaseModel] = EmptyToolInput
 
-    def _run(self, **kwargs) -> str:
+    def _run(self, *, tool_input: EmptyToolInput, **kwargs) -> str:
         try:
             new_orders = self.get_new_orders()
             if not new_orders:
@@ -25,7 +25,7 @@ class S3Tool(BaseTool):
         except Exception as e:
             return f"Błąd: {str(e)}"
 
-    def _arun(self, **kwargs):
+    def _arun(self, *, tool_input: EmptyToolInput, **kwargs):
         raise NotImplementedError("Async niezaimplementowany")
 
     def get_new_orders(self) -> List[Dict]:

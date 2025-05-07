@@ -43,7 +43,7 @@ class WojewodztwoMapperTool(BaseTool):
                 self._mapa_id = json.load(f)
         return self._mapa_id
 
-    def _run(self, tool_input: MapperInput, **kwargs) -> str:
+    def _run(self, *, tool_input: MapperInput, **kwargs) -> str:
         try:
             mapa = self._load_id_map()
 
@@ -60,7 +60,7 @@ class WojewodztwoMapperTool(BaseTool):
         except Exception as e:
             return f"❌ Błąd mapowania: {str(e)}"
 
-    def _arun(self, tool_input: MapperInput, **kwargs):
+    def _arun(self, *, tool_input: MapperInput, **kwargs):
         raise NotImplementedError("Async niezaimplementowany")
 
 # ✅ Funkcja pomocnicza do użytku poza agentem

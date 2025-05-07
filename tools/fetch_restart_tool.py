@@ -13,7 +13,7 @@ class FetchRestartTool(BaseTool):
     description: str = "Restartuje aplikację Fetch na Fly.io (najpierw /stop, potem /start)"
     args_schema: Type[BaseModel] = EmptyToolInput
 
-    def _run(self, **kwargs) -> str:
+    def _run(self, *, tool_input: EmptyToolInput, **kwargs) -> str:
         try:
             base_url = "https://fetch-2-0.fly.dev"
 
@@ -31,5 +31,5 @@ class FetchRestartTool(BaseTool):
         except Exception as e:
             return f"❌ Wyjątek podczas restartu Fetch: {str(e)}"
 
-    def _arun(self, **kwargs):
+    def _arun(self, *, tool_input: EmptyToolInput, **kwargs):
         raise NotImplementedError("Async niezaimplementowany")
