@@ -1,13 +1,13 @@
 from langchain.tools import BaseTool
 from pydantic import BaseModel, Field
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Type
 import json
 import os
 
 # Tabela prefixów kodów pocztowych
 KOD_WOJ = {
     "00": "MAZOWIECKIE", "01": "MAZOWIECKIE", "02": "MAZOWIECKIE", "03": "MAZOWIECKIE", "04": "MAZOWIECKIE",
-    "05": "MAZOWIECKIE",  # powiaty wokół Warszawy
+    "05": "MAZOWIECKIE",
     "10": "WARMIŃSKO-MAZURSKIE",
     "15": "PODLASKIE",
     "20": "LUBELSKIE",
@@ -31,7 +31,7 @@ class MapperInput(BaseModel):
 class WojewodztwoMapperTool(BaseTool):
     name: str = "mapuj_wojewodztwo"
     description: str = "Mapuje ID województwa lub kod pocztowy na nazwę województwa"
-    args_schema = MapperInput
+    args_schema: Type[BaseModel] = MapperInput
 
     def __init__(self):
         super().__init__()
@@ -48,11 +48,9 @@ class WojewodztwoMapperTool(BaseTool):
         try:
             mapa = self._load_id_map()
 
-            # Najpierw próbujemy przez ID
             if tool_input.wojewodztwo_id and tool_input.wojewodztwo_id in mapa:
                 return mapa[tool_input.wojewodztwo_id]
 
-            # Potem próbujemy przez kod pocztowy
             if tool_input.kod_pocztowy:
                 prefix = tool_input.kod_pocztowy.replace("-", "")[:2]
                 if prefix in KOD_WOJ:
