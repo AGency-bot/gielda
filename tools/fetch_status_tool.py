@@ -2,8 +2,8 @@ from langchain.tools import BaseTool
 import requests
 
 class FetchStatusTool(BaseTool):
-    name = "fetch_status"
-    description = "Sprawdza, czy aplikacja Fetch działa na Fly.io (czy pętla jest aktywna)"
+    name: str = "fetch_status"
+    description: str = "Sprawdza, czy aplikacja Fetch działa na Fly.io (czy pętla jest aktywna)"
 
     def _run(self, tool_input: str = "", **kwargs) -> str:
         try:

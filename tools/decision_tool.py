@@ -9,10 +9,10 @@ class DecisionTool(BaseTool):
 
     def __init__(self):
         super().__init__()
-        self._df = None
+        self._df: Union[None, pd.DataFrame] = None
 
     @property
-    def df(self):
+    def df(self) -> pd.DataFrame:
         if self._df is None:
             path = os.path.join("dane", "tablica binarna segment + wojewodztwo.xlsx")
             df = pd.read_excel(path)
@@ -20,7 +20,7 @@ class DecisionTool(BaseTool):
             self._df = df
         return self._df
 
-    def _run(self, tool_input, **kwargs) -> str:
+    def _run(self, tool_input: Union[str, Dict[str, Any]], **kwargs) -> str:
         try:
             if not isinstance(tool_input, dict):
                 return "❌ Oczekiwano obiektu typu dict z kluczami 'segment' i 'wojewodztwo'"
@@ -39,5 +39,5 @@ class DecisionTool(BaseTool):
         except Exception as e:
             return f"❌ Błąd w DecisionTool: {str(e)}"
 
-    def _arun(self, tool_input, **kwargs):
+    def _arun(self, tool_input: Union[str, Dict[str, Any]], **kwargs):
         raise NotImplementedError("Async niezaimplementowany")

@@ -2,6 +2,7 @@ from langchain.tools import BaseTool
 import boto3
 import os
 import json
+from typing import Optional, List, Dict
 
 class S3Tool(BaseTool):
     name: str = "load_new_orders"
@@ -19,7 +20,7 @@ class S3Tool(BaseTool):
     def _arun(self, **kwargs):
         raise NotImplementedError("Async niezaimplementowany")
 
-    def get_new_orders(self):
+    def get_new_orders(self) -> List[Dict]:
         """Zwraca listę nowych rekordów (dict), porównując 2 najnowsze snapshoty z S3."""
         bucket_name = os.environ.get("S3_BUCKET_NAME")
         s3 = boto3.client(
@@ -47,7 +48,7 @@ class S3Tool(BaseTool):
         new_ids = latest_ids - previous_ids
         return [r for r in latest_data.get("records", []) if r["id"] in new_ids]
 
-    def _get_full_snapshot(self):
+    def _get_full_snapshot(self) -> Optional[Dict]:
         """Zwraca pełny najnowszy snapshot (dict)."""
         try:
             bucket_name = os.environ.get("S3_BUCKET_NAME")
@@ -69,6 +70,6 @@ class S3Tool(BaseTool):
             print(f"Błąd pobierania pełnego snapshotu: {str(e)}")
             return None
 
-    def _load_snapshot(self, s3, bucket_name, key):
+    def _load_snapshot(self, s3, bucket_name: str, key: str) -> Dict:
         obj = s3.get_object(Bucket=bucket_name, Key=key)
         return json.loads(obj["Body"].read())
