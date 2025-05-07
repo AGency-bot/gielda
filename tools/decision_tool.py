@@ -1,11 +1,17 @@
 from langchain.tools import BaseTool
 from typing import Union, Dict, Any
+from pydantic import BaseModel, Field
 import pandas as pd
 import os
+
+class DecisionInput(BaseModel):
+    segment: str = Field(..., description="Segment zlecenia, np. 'TIR'")
+    wojewodztwo: str = Field(..., description="Województwo, np. 'MAZOWIECKIE'")
 
 class DecisionTool(BaseTool):
     name: str = "decide_if_order_is_good"
     description: str = "Podejmuje decyzję na podstawie segmentu i województwa, czy zlecenie pasuje do preferencji"
+    args_schema = DecisionInput
 
     def __init__(self):
         super().__init__()
@@ -20,13 +26,10 @@ class DecisionTool(BaseTool):
             self._df = df
         return self._df
 
-    def _run(self, tool_input: Union[str, Dict[str, Any]], **kwargs) -> str:  # ✅ TYP DODANY
+    def _run(self, tool_input: DecisionInput, **kwargs) -> str:
         try:
-            if not isinstance(tool_input, dict):
-                return "❌ Oczekiwano obiektu typu dict z kluczami 'segment' i 'wojewodztwo'"
-
-            segment = tool_input.get("segment", "").strip().upper()
-            wojewodztwo = tool_input.get("wojewodztwo", "").strip().upper()
+            segment = tool_input.segment.strip().upper()
+            wojewodztwo = tool_input.wojewodztwo.strip().upper()
 
             if wojewodztwo not in self.df.columns:
                 return f"❌ Nieznane województwo: {wojewodztwo}"
@@ -35,9 +38,8 @@ class DecisionTool(BaseTool):
 
             wartosc = self.df.loc[self.df["SEGMENT"] == segment, wojewodztwo].values[0]
             return "TAK" if wartosc == 1 else "NIE"
-
         except Exception as e:
             return f"❌ Błąd w DecisionTool: {str(e)}"
 
-    def _arun(self, tool_input: Union[str, Dict[str, Any]], **kwargs):
+    def _arun(self, tool_input: DecisionInput, **kwargs):
         raise NotImplementedError("Async niezaimplementowany")
