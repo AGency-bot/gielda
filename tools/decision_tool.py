@@ -9,11 +9,10 @@ class DecisionTool(BaseTool):
 
     def __init__(self):
         super().__init__()
-        self._df = None  # prywatna zmienna przechowująca załadowaną tabelę
+        self._df = None
 
     @property
     def df(self):
-        """Lazy load tablicy binarnej"""
         if self._df is None:
             path = os.path.join("dane", "tablica binarna segment + wojewodztwo.xlsx")
             df = pd.read_excel(path)
@@ -35,7 +34,6 @@ class DecisionTool(BaseTool):
                 return f"❌ Nieznany segment: {segment}"
 
             wartosc = self.df.loc[self.df["SEGMENT"] == segment, wojewodztwo].values[0]
-
             return "TAK" if wartosc == 1 else "NIE"
 
         except Exception as e:
