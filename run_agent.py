@@ -1,13 +1,27 @@
 import os
 import json
 from tools.fetch_tool import FetchTool
+from tools.fetch_status_tool import FetchStatusTool
+from tools.fetch_restart_tool import FetchRestartTool
 from tools.s3_tool import S3Tool
 from tools.decision_tool import DecisionTool
 
 def main():
-    print("=== TEST: uruchomienie FetchTool ===")
+    print("=== STATUS: sprawdzanie Fetch ===")
+    status = FetchStatusTool()
+    response = status.run(tool_input="")
+
+    print(f"ℹ️ Status Fetch: {response}")
+
+    if "offline" in response.lower() or "błąd" in response.lower():
+        print("🔁 Fetch nie działa – próbuję restart...")
+        restarter = FetchRestartTool()
+        restart_response = restarter.run(tool_input="")
+        print(f"🔄 {restart_response}")
+
+    print("\n=== TEST: uruchomienie FetchTool ===")
     fetch = FetchTool()
-    print(fetch.run(tool_input=""))  # poprawka: jawne przekazanie tool_input
+    print(fetch.run(tool_input=""))  # bezpieczne nawet jeśli już działa
 
     print("\n=== TEST: pobranie snapshotu z S3Tool ===")
     s3 = S3Tool()
