@@ -8,13 +8,10 @@ class FetchRestartTool(BaseTool):
 
     def _run(self, tool_input: str = "", **kwargs) -> str:
         try:
-            base_url = "https://fetch.fly.dev"  # zmień, jeśli masz inny adres
+            base_url = "https://fetch-2-0.fly.dev"
 
-            # Krok 1: zatrzymaj
             stop_resp = requests.get(f"{base_url}/stop", timeout=5)
             time.sleep(2)
-
-            # Krok 2: uruchom ponownie
             start_resp = requests.get(f"{base_url}/start", timeout=5)
 
             if stop_resp.status_code != 200:
