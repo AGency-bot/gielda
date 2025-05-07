@@ -7,7 +7,7 @@ class FetchStatusTool(BaseTool):
 
     def _run(self, tool_input: str = "", **kwargs) -> str:
         try:
-            url = "https://fetch.fly.dev/status"  # zamień na swój adres, jeśli inny
+            url = "https://fetch-2-0.fly.dev/status"
             response = requests.get(url, timeout=5)
             if response.status_code == 200:
                 data = response.json()
