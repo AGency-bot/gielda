@@ -5,7 +5,7 @@ import boto3
 import os
 import json
 
-from tools.mapper_tool import MapperTool
+from tools.mapper_tool import WojewodztwoMapperTool
 
 class EmptyToolInput(BaseModel):
     """Brak argumentów wejściowych dla narzędzia."""
