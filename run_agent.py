@@ -39,17 +39,13 @@ def main():
 
     first_record = records[0]
     segment = first_record.get("cellValuesByColumnId", {}).get("fldfEIZxM3O4pF3bW", "").upper()
-    wojewodztwo = first_record.get("cellValuesByColumnId", {}).get("fldCbMMnj7vuHlmsu", "").capitalize()
+    wojewodztwo = first_record.get("cellValuesByColumnId", {}).get("fldCbMMnj7vuHlmsu", "").upper()
 
     print(f"📦 Zlecenie: segment = {segment}, województwo = {wojewodztwo}")
 
     print("\n=== TEST: decyzja ===")
     decider = DecisionTool()
-    decyzja = decider.run(tool_input={
-        "segment": segment,
-        "wojewodztwo": wojewodztwo
-    })
-
+    decyzja = decider.run(segment=segment, wojewodztwo=wojewodztwo)  # ✅ Nowy sposób wywołania
     print(f"🧠 Decyzja agenta: {decyzja}")
 
 if __name__ == "__main__":
