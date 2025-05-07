@@ -12,7 +12,7 @@ from tools.decision_tool import DecisionTool
 def main():
     print("=== STATUS: sprawdzanie Fetch ===")
     status = FetchStatusTool()
-    response = status.run(tool_input={})
+    response = status.run(tool_input=FetchStatusTool.args_schema())
 
     print(f"ℹ️ Status Fetch: {response}")
 
