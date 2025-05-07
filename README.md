@@ -1,2 +1,2 @@
 # gielda
-LangChain agent for stock order scraping
+LangChain agent for analyzing and scraping stock orders intelligently
