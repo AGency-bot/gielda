@@ -15,5 +15,5 @@ class FetchTool(BaseTool):
         except Exception as e:
             return f"❌ Błąd podczas wywołania Fetch: {str(e)}"
 
-    def _arun(self, tool_input: Union[str, Dict[str, Any]], **kwargs):
+    def _arun(self, tool_input: Union[str, Dict[str, Any]] = "", **kwargs):
         raise NotImplementedError("Async niezaimplementowany")

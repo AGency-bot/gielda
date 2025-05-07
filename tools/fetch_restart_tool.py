@@ -3,8 +3,8 @@ import requests
 import time
 
 class FetchRestartTool(BaseTool):
-    name = "restart_fetch"
-    description = "Restartuje aplikację Fetch na Fly.io (najpierw /stop, potem /start)"
+    name: str = "restart_fetch"
+    description: str = "Restartuje aplikację Fetch na Fly.io (najpierw /stop, potem /start)"
 
     def _run(self, tool_input: str = "", **kwargs) -> str:
         try:
