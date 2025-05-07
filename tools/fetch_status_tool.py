@@ -1,11 +1,18 @@
-from langchain.tools import BaseTool
+from langchain_core.tools import BaseTool
+from pydantic import BaseModel
+from typing import Type
 import requests
+
+class EmptyToolInput(BaseModel):
+    """Brak danych wejściowych."""
+    pass
 
 class FetchStatusTool(BaseTool):
     name: str = "fetch_status"
     description: str = "Sprawdza, czy aplikacja Fetch działa na Fly.io (czy pętla jest aktywna)"
+    args_schema: Type[BaseModel] = EmptyToolInput
 
-    def _run(self, tool_input: str = "", **kwargs) -> str:
+    def _run(self, **kwargs) -> str:
         try:
             url = "https://fetch-2-0.fly.dev/status"
             response = requests.get(url, timeout=5)
@@ -21,5 +28,5 @@ class FetchStatusTool(BaseTool):
         except Exception as e:
             return f"BŁĄD: {str(e)}"
 
-    def _arun(self, tool_input: str = "", **kwargs):
+    def _arun(self, **kwargs):
         raise NotImplementedError("Async niezaimplementowany")

@@ -1,12 +1,19 @@
-from langchain.tools import BaseTool
+from langchain_core.tools import BaseTool
+from pydantic import BaseModel
+from typing import Type
 import requests
 import time
+
+class EmptyToolInput(BaseModel):
+    """Brak danych wejściowych dla restartu Fetch."""
+    pass
 
 class FetchRestartTool(BaseTool):
     name: str = "restart_fetch"
     description: str = "Restartuje aplikację Fetch na Fly.io (najpierw /stop, potem /start)"
+    args_schema: Type[BaseModel] = EmptyToolInput
 
-    def _run(self, tool_input: str = "", **kwargs) -> str:
+    def _run(self, **kwargs) -> str:
         try:
             base_url = "https://fetch-2-0.fly.dev"
 
@@ -24,5 +31,5 @@ class FetchRestartTool(BaseTool):
         except Exception as e:
             return f"❌ Wyjątek podczas restartu Fetch: {str(e)}"
 
-    def _arun(self, tool_input: str = "", **kwargs):
+    def _arun(self, **kwargs):
         raise NotImplementedError("Async niezaimplementowany")
