@@ -4,7 +4,6 @@ from typing import Dict, Any, Optional, Type
 import json
 import os
 
-# Tabela prefixów kodów pocztowych
 KOD_WOJ = {
     "00": "MAZOWIECKIE", "01": "MAZOWIECKIE", "02": "MAZOWIECKIE", "03": "MAZOWIECKIE", "04": "MAZOWIECKIE",
     "05": "MAZOWIECKIE",
@@ -63,3 +62,19 @@ class WojewodztwoMapperTool(BaseTool):
 
     def _arun(self, tool_input: MapperInput, **kwargs):
         raise NotImplementedError("Async niezaimplementowany")
+
+# ✅ Funkcja pomocnicza do użytku poza agentem
+def resolve_wojewodztwo(raw_value: str) -> Optional[str]:
+    try:
+        path = os.path.join("dane", "wojewodztwa_mapping.json")
+        with open(path, "r", encoding="utf-8") as f:
+            mapa_id = json.load(f)
+
+        if raw_value in mapa_id:
+            return mapa_id[raw_value]
+
+        prefix = raw_value.replace("-", "")[:2]
+        return KOD_WOJ.get(prefix)
+
+    except Exception:
+        return None
