@@ -21,7 +21,7 @@ class DecisionTool(BaseTool):
             self._df = df
         return self._df
 
-    def _run(self, tool_input: Union[str, Dict[str, Any]], **kwargs) -> str:
+    def _run(self, tool_input, **kwargs) -> str:
         try:
             if not isinstance(tool_input, dict):
                 return "❌ Oczekiwano obiektu typu dict z kluczami 'segment' i 'wojewodztwo'"
@@ -41,5 +41,5 @@ class DecisionTool(BaseTool):
         except Exception as e:
             return f"❌ Błąd w DecisionTool: {str(e)}"
 
-    def _arun(self, tool_input: Union[str, Dict[str, Any]], **kwargs):
+    def _arun(self, tool_input, **kwargs):
         raise NotImplementedError("Async niezaimplementowany")
