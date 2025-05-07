@@ -1,10 +1,12 @@
 import os
+from dotenv import load_dotenv
+load_dotenv()
 import json
 from tools.fetch_tool import FetchTool
 from tools.fetch_status_tool import FetchStatusTool
 from tools.fetch_restart_tool import FetchRestartTool
 from tools.s3_tool import S3Tool
-from tools.decision_tool import DecisionTool
+from tools.decision_tool import DecisionTool, DecisionInput  # ✅ Dodano DecisionInput
 
 def main():
     print("=== STATUS: sprawdzanie Fetch ===")
@@ -45,10 +47,10 @@ def main():
 
     print("\n=== TEST: decyzja ===")
     decider = DecisionTool()
-    decyzja = decider.run(tool_input={
-        "segment": segment,
-        "wojewodztwo": wojewodztwo
-    })
+    decyzja = decider.run(tool_input=DecisionInput(  # ✅ Obiekt Pydantic zamiast dict
+        segment=segment,
+        wojewodztwo=wojewodztwo
+    ))
     print(f"🧠 Decyzja agenta: {decyzja}")
 
 if __name__ == "__main__":
